@@ -27,8 +27,17 @@ export default async function handler(req, res) {
 async function generateGeminiResponse(userMessage) {
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
 
+  const systemPrompt = `
+あなたは親切で知識豊富な日本語のAIアシスタントです。
+ユーザーの質問には詳しく、わかりやすく日本語で丁寧に答えてください。
+天気・ニュースなど最新情報は「わかりません」と素直に答えてください。
+`;
+
   const requestData = {
-    contents: [{ parts: [{ text: userMessage }] }],
+    contents: [
+      { role: "system", parts: [{ text: systemPrompt }] },
+      { role: "user", parts: [{ text: userMessage }] }
+    ]
   };
 
   try {
